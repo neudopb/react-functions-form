@@ -6,12 +6,13 @@ function DadosUsuario({ enviarDados, validarSenha, validarConfirmarSenha }) {
   const [email, setEmail] = useState("");
   const[senha, setSenha] = useState("");
   const[confirmSenha, setConfirmSenha] = useState("");
-  const[erros, setErros] = useState({senha:{valido:true, texto:""}, confirmSenha:{valido:true, texto:""}});
+  const objErro = {valido:true, texto:""}
+  const[erros, setErros] = useState({senha:objErro, confirmSenha:objErro});
 
   return (
     <form onSubmit={(evento) => {
       evento.preventDefault();
-      enviarDados();
+      enviarDados({email, senha});
     }}>
 
       <TextField

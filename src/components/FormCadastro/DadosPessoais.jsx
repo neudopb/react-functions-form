@@ -14,7 +14,7 @@ function DadosPessoais({enviarDados, validarCpf}) {
     <form
       onSubmit={(evento) => {
         evento.preventDefault();
-        enviarDados();
+        enviarDados({nome, sobrenome, cpf, promocoes, novidades});
       }}
     >
 
