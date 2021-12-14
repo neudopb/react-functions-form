@@ -14,7 +14,7 @@ function DadosPessoais({enviarDados, validarCpf}) {
     <form
       onSubmit={(evento) => {
         evento.preventDefault();
-        enviarDados({ nome, sobrenome, cpf, promocoes, novidades });
+        enviarDados();
       }}
     >
 
@@ -25,6 +25,8 @@ function DadosPessoais({enviarDados, validarCpf}) {
         }}
         id="nome"
         label="Nome"
+        type="text"
+        required
         variant="outlined"
         margin="normal"
         fullWidth
@@ -37,6 +39,8 @@ function DadosPessoais({enviarDados, validarCpf}) {
         }}
         id="sobrenome"
         label="Sobrenome"
+        type="text"
+        required
         variant="outlined"
         margin="normal"
         fullWidth
@@ -57,6 +61,8 @@ function DadosPessoais({enviarDados, validarCpf}) {
         helperText={erros.cpf.texto}
         id="cpf"
         label="CPF"
+        type="number"
+        required
         variant="outlined"
         margin="normal"
         fullWidth
