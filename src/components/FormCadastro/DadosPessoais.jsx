@@ -1,44 +1,26 @@
 import React, { useState, useContext } from "react";
 import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core";
 import ValidacoesCadastro from "../../contexts/ValidacoesCadastro";
+import useErros from "../../hooks/useErros";
 
 function DadosPessoais({ enviarDados }) {
-
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
   const [cpf, setCpf] = useState("");
   const [promocoes, setPromocoes] = useState(true);
   const [novidades, setNovidades] = useState(true);
-  const [erros, setErros] = useState({cpf:{valido:true, texto:""}});
-
   const validacoes = useContext(ValidacoesCadastro);
-
-  function validarCampo(evento) {
-    const {name, value} = evento.target;
-    const newErros = {...erros};
-    newErros[name] = validacoes[name](value);
-    setErros(newErros);
-  }
-
-  function validarEnvio() {
-    for (let campo in erros) {
-      if (!erros[campo].valido) {
-        return false;
-      }
-    }
-    return true;
-  }
+  const [erros, validarCampo, validarEnvio] = useErros(validacoes);
 
   return (
     <form
       onSubmit={(evento) => {
         evento.preventDefault();
         if (validarEnvio()) {
-          enviarDados({nome, sobrenome, cpf, promocoes, novidades});
+          enviarDados({ nome, sobrenome, cpf, promocoes, novidades });
         }
       }}
     >
-
       <TextField
         value={nome}
         onChange={(evento) => {
@@ -53,7 +35,7 @@ function DadosPessoais({ enviarDados }) {
         margin="normal"
         fullWidth
       />
-      
+
       <TextField
         value={sobrenome}
         onChange={(evento) => {
@@ -68,7 +50,7 @@ function DadosPessoais({ enviarDados }) {
         margin="normal"
         fullWidth
       />
-      
+
       <TextField
         value={cpf}
         onChange={(evento) => {
@@ -102,7 +84,7 @@ function DadosPessoais({ enviarDados }) {
           />
         }
       />
-      
+
       <FormControlLabel
         label="Novidades"
         control={

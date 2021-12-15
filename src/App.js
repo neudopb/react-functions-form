@@ -20,7 +20,7 @@ class App extends Component {
         <Typography variant="h3" component="h1" align="center">
           Formulario de Cadastro
         </Typography>
-        
+
         <ValidacoesCadastro.Provider
           value={{
             cpf: validarCpf,

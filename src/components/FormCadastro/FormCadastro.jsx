@@ -6,7 +6,6 @@ import DadosUsuario from "./DadosUsuario";
 import { Typography, Stepper, Step, StepLabel } from "@material-ui/core";
 
 function FormCadastro({ enviarDados }) {
-
   const [etapaAtual, setEtapaAtual] = useState(0);
   const [dadosColetados, setDadosColetados] = useState({});
 
@@ -14,11 +13,13 @@ function FormCadastro({ enviarDados }) {
     <DadosUsuario enviarDados={coletarDados} />,
     <DadosPessoais enviarDados={coletarDados} />,
     <DadosEntrega enviarDados={coletarDados} />,
-    <Typography variant='h5' align='center'>Cadastro Realizado com Sucesso!!!</Typography>
+    <Typography variant="h5" align="center">
+      Cadastro Realizado com Sucesso!!!
+    </Typography>,
   ];
 
   function coletarDados(dados) {
-    setDadosColetados({...dadosColetados, ...dados});
+    setDadosColetados({ ...dadosColetados, ...dados });
     proximo();
   }
 
@@ -27,7 +28,7 @@ function FormCadastro({ enviarDados }) {
   }
 
   useEffect(() => {
-    if (etapaAtual === formularios.length -1){
+    if (etapaAtual === formularios.length - 1) {
       enviarDados(dadosColetados);
     }
   });
@@ -35,10 +36,18 @@ function FormCadastro({ enviarDados }) {
   return (
     <>
       <Stepper activeStep={etapaAtual}>
-        <Step><StepLabel>Login</StepLabel></Step>
-        <Step><StepLabel>Pessoal</StepLabel></Step>
-        <Step><StepLabel>Endereço</StepLabel></Step>
-        <Step><StepLabel>Finalização</StepLabel></Step>
+        <Step>
+          <StepLabel>Login</StepLabel>
+        </Step>
+        <Step>
+          <StepLabel>Pessoal</StepLabel>
+        </Step>
+        <Step>
+          <StepLabel>Endereço</StepLabel>
+        </Step>
+        <Step>
+          <StepLabel>Finalização</StepLabel>
+        </Step>
       </Stepper>
       {formularios[etapaAtual]}
     </>

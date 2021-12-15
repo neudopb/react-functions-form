@@ -1,47 +1,25 @@
 import React, { useState, useContext } from "react";
 import { Button, TextField } from "@material-ui/core";
 import ValidacoesCadastro from "../../contexts/ValidacoesCadastro";
+import useErros from "../../hooks/useErros";
 
 function DadosUsuario({ enviarDados }) {
-
   const [email, setEmail] = useState("");
-  const[senha, setSenha] = useState("");
-  const[confirmSenha, setConfirmSenha] = useState("");
-  const objErro = {valido:true, texto:""}
-  const[erros, setErros] = useState({senha:objErro, confirmSenha:objErro});
-
+  const [senha, setSenha] = useState("");
+  const [confirmSenha, setConfirmSenha] = useState("");
   const validacoes = useContext(ValidacoesCadastro);
-
-  function validarCampo(evento) {
-    const {name, value} = evento.target;
-    const newErros = {...erros};
-
-    if (name === 'confirmSenha') {
-      newErros[name] = validacoes[name](value, senha);
-    } else {
-      newErros[name] = validacoes[name](value);
-    }
-
-    setErros(newErros);
-  }
-
-  function validarEnvio() {
-    for (let campo in erros) {
-      if (!erros[campo].valido) {
-        return false;
-      }
-    }
-    return true;
-  }
+  const [erros, validarCampo, validarEnvio, validarConfirmSenha] =
+    useErros(validacoes);
 
   return (
-    <form onSubmit={(evento) => {
-      evento.preventDefault();
-      if (validarEnvio()) {
-        enviarDados({email, senha});
-      }
-    }}>
-
+    <form
+      onSubmit={(evento) => {
+        evento.preventDefault();
+        if (validarEnvio()) {
+          enviarDados({ email, senha });
+        }
+      }}
+    >
       <TextField
         value={email}
         onChange={(evento) => {
@@ -80,7 +58,9 @@ function DadosUsuario({ enviarDados }) {
         onChange={(evento) => {
           setConfirmSenha(evento.target.value);
         }}
-        onBlur={validarCampo}
+        onBlur={(evento) => {
+          validarConfirmSenha(evento, senha);
+        }}
         error={!erros.confirmSenha.valido}
         helperText={erros.confirmSenha.texto}
         id="confirmSenha"
