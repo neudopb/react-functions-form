@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, TextField } from "@material-ui/core";
+import ValidacoesCadastro from "../../contexts/ValidacoesCadastro";
 
-function DadosUsuario({ enviarDados, validarSenha, validarConfirmarSenha }) {
+function DadosUsuario({ enviarDados }) {
 
   const [email, setEmail] = useState("");
   const[senha, setSenha] = useState("");
@@ -9,10 +10,36 @@ function DadosUsuario({ enviarDados, validarSenha, validarConfirmarSenha }) {
   const objErro = {valido:true, texto:""}
   const[erros, setErros] = useState({senha:objErro, confirmSenha:objErro});
 
+  const validacoes = useContext(ValidacoesCadastro);
+
+  function validarCampo(evento) {
+    const {name, value} = evento.target;
+    const newErros = {...erros};
+
+    if (name === 'confirmSenha') {
+      newErros[name] = validacoes[name](value, senha);
+    } else {
+      newErros[name] = validacoes[name](value);
+    }
+
+    setErros(newErros);
+  }
+
+  function validarEnvio() {
+    for (let campo in erros) {
+      if (!erros[campo].valido) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   return (
     <form onSubmit={(evento) => {
       evento.preventDefault();
-      enviarDados({email, senha});
+      if (validarEnvio()) {
+        enviarDados({email, senha});
+      }
     }}>
 
       <TextField
@@ -21,6 +48,7 @@ function DadosUsuario({ enviarDados, validarSenha, validarConfirmarSenha }) {
           setEmail(evento.target.value);
         }}
         id="email"
+        name="email"
         label="Email"
         type="email"
         required
@@ -34,13 +62,11 @@ function DadosUsuario({ enviarDados, validarSenha, validarConfirmarSenha }) {
         onChange={(evento) => {
           setSenha(evento.target.value);
         }}
-        onBlur={(event) => {
-          const valid = validarSenha(senha);
-          setErros({...erros, senha: valid});
-        }}
+        onBlur={validarCampo}
         error={!erros.senha.valido}
         helperText={erros.senha.texto}
         id="senha"
+        name="senha"
         label="Senha"
         type="password"
         required
@@ -54,13 +80,11 @@ function DadosUsuario({ enviarDados, validarSenha, validarConfirmarSenha }) {
         onChange={(evento) => {
           setConfirmSenha(evento.target.value);
         }}
-        onBlur={(event) => {
-          const valid = validarConfirmarSenha(senha, confirmSenha)
-          setErros({...erros, confirmSenha: valid});
-        }}
+        onBlur={validarCampo}
         error={!erros.confirmSenha.valido}
         helperText={erros.confirmSenha.texto}
         id="confirmSenha"
+        name="confirmSenha"
         label="Confirmar Senha"
         type="password"
         required
@@ -70,7 +94,7 @@ function DadosUsuario({ enviarDados, validarSenha, validarConfirmarSenha }) {
       />
 
       <Button type="submit" variant="contained" color="primary">
-        Proximo
+        Próximo
       </Button>
     </form>
   );

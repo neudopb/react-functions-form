@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core";
+import ValidacoesCadastro from "../../contexts/ValidacoesCadastro";
 
-function DadosPessoais({enviarDados, validarCpf}) {
+function DadosPessoais({ enviarDados }) {
 
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
@@ -10,11 +11,31 @@ function DadosPessoais({enviarDados, validarCpf}) {
   const [novidades, setNovidades] = useState(true);
   const [erros, setErros] = useState({cpf:{valido:true, texto:""}});
 
+  const validacoes = useContext(ValidacoesCadastro);
+
+  function validarCampo(evento) {
+    const {name, value} = evento.target;
+    const newErros = {...erros};
+    newErros[name] = validacoes[name](value);
+    setErros(newErros);
+  }
+
+  function validarEnvio() {
+    for (let campo in erros) {
+      if (!erros[campo].valido) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   return (
     <form
       onSubmit={(evento) => {
         evento.preventDefault();
-        enviarDados({nome, sobrenome, cpf, promocoes, novidades});
+        if (validarEnvio()) {
+          enviarDados({nome, sobrenome, cpf, promocoes, novidades});
+        }
       }}
     >
 
@@ -24,6 +45,7 @@ function DadosPessoais({enviarDados, validarCpf}) {
           setNome(evento.target.value);
         }}
         id="nome"
+        name="nome"
         label="Nome"
         type="text"
         required
@@ -38,6 +60,7 @@ function DadosPessoais({enviarDados, validarCpf}) {
           setSobrenome(evento.target.value);
         }}
         id="sobrenome"
+        name="sobrenome"
         label="Sobrenome"
         type="text"
         required
@@ -53,13 +76,11 @@ function DadosPessoais({enviarDados, validarCpf}) {
             setCpf(evento.target.value);
           }
         }}
-        onBlur={(event) => {
-          const valid = validarCpf(cpf);
-          setErros({cpf:valid});
-        }}
+        onBlur={validarCampo}
         error={!erros.cpf.valido}
         helperText={erros.cpf.texto}
         id="cpf"
+        name="cpf"
         label="CPF"
         type="number"
         required
@@ -97,7 +118,7 @@ function DadosPessoais({enviarDados, validarCpf}) {
       />
 
       <Button type="submit" variant="contained" color="primary">
-        Proximo
+        Próximo
       </Button>
     </form>
   );

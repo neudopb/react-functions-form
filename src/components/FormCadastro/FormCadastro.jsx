@@ -5,23 +5,14 @@ import DadosUsuario from "./DadosUsuario";
 
 import { Typography, Stepper, Step, StepLabel } from "@material-ui/core";
 
-function FormCadastro({
-  enviarDados,
-  validarCpf,
-  validarSenha,
-  validarConfirmarSenha
-}) {
+function FormCadastro({ enviarDados }) {
 
   const [etapaAtual, setEtapaAtual] = useState(0);
   const [dadosColetados, setDadosColetados] = useState({});
 
   const formularios = [
-    <DadosUsuario
-      enviarDados={coletarDados}
-      validarSenha={validarSenha}
-      validarConfirmarSenha={validarConfirmarSenha}
-    />,
-    <DadosPessoais enviarDados={coletarDados} validarCpf={validarCpf} />,
+    <DadosUsuario enviarDados={coletarDados} />,
+    <DadosPessoais enviarDados={coletarDados} />,
     <DadosEntrega enviarDados={coletarDados} />,
     <Typography variant='h5' align='center'>Cadastro Realizado com Sucesso!!!</Typography>
   ];
